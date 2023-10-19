@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
@@ -16,9 +17,47 @@ const Contact = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  const handleSubmit = (e) => {};
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    emailjs
+      .send(
+        'service_0csl2ml',
+        'template_llo3o9h',
+        {
+          from_name: form.name,
+          to_name: 'Yoga Pratama',
+          from_email: form.email,
+          to_email: 'yogapr.dev@gmail.com',
+          message: form.message,
+        },
+        'n0C3XzC9GYTcuAHpq'
+      )
+      .then(
+        () => {
+          setLoading(false);
+          alert('Thank you. I will get back to you as soon as possible.');
+
+          setForm({
+            name: '',
+            email: '',
+            message: '',
+          });
+        },
+        (error) => {
+          setLoading(false);
+          console.log(error);
+          alert('Something went wrong.');
+        }
+      );
+  };
 
   return (
     <div className="xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden">
